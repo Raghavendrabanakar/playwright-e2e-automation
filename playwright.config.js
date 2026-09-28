@@ -1,5 +1,12 @@
 // @ts-check
 import { defineConfig } from '@playwright/test';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+const baseURL =
+  process.env.PLAYWRIGHT_TEST_BASE_URL ||
+  'https://playwrightautomationbyraghavendra.netlify.app/';
 
 export default defineConfig({
   testDir: './tests',
@@ -20,21 +27,16 @@ export default defineConfig({
   ],
 
   use: {
-    baseURL: 'https://playwrightautomationbyraghavendra.netlify.app/',
-
+    baseURL,
     browserName: 'chromium',
 
-    // Headed locally, headless in GitHub Actions
     headless: !!process.env.CI,
 
     screenshot: 'only-on-failure',
-
     video: 'retain-on-failure',
-
     trace: 'on',
 
     launchOptions: {
-      // Slow motion only when running locally
       slowMo: process.env.CI ? 0 : 800,
     },
   },

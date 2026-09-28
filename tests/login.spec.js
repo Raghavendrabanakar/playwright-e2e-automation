@@ -6,11 +6,13 @@ test.describe('Login Tests', () => {
 
     await page.goto('/');
 
-    await page.locator('#username').fill('raghu');
+    await page
+      .locator('#username')
+      .fill(process.env.TEST_USERNAME);
 
     await page
       .locator('[type="password"]')
-      .fill('Test@123');
+      .fill(process.env.TEST_PASSWORD);
 
     await page.locator('#login-button').click();
 
@@ -28,7 +30,9 @@ test.describe('Login Tests', () => {
 
     await page.goto('/');
 
-    await page.locator('#username').fill('wronguser');
+    await page
+      .locator('#username')
+      .fill('wronguser');
 
     await page
       .locator('[type="password"]')
@@ -54,7 +58,7 @@ test.describe('Login Tests', () => {
 
     await page
       .locator('[type="password"]')
-      .fill('Test@123');
+      .fill(process.env.TEST_PASSWORD);
 
     await page.locator('#login-button').click();
 

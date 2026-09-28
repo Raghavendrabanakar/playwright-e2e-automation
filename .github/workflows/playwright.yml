@@ -29,6 +29,9 @@ jobs:
 
       - name: Run Playwright tests
         run: npx playwright test
+        env:
+          TEST_USERNAME: ${{ secrets.TEST_USERNAME }}
+          TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
 
       - name: Upload Playwright report
         uses: actions/upload-artifact@v5
@@ -37,4 +40,3 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 30
-          
