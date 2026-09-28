@@ -1,0 +1,37 @@
+// @ts-check
+import { defineConfig } from '@playwright/test';
+
+export default defineConfig({
+  testDir: './tests',
+
+  timeout: 30 * 1000,
+
+  expect: {
+    timeout: 5000,
+  },
+
+  fullyParallel: false,
+
+  reporter: [
+    ['html', { open: 'never' }],
+    ['list'],
+  ],
+
+  use: {
+    baseURL: 'https://playwrightautomationbyraghavendra.netlify.app/',
+
+    browserName: 'chromium',
+
+    headless: false,
+
+    screenshot: 'only-on-failure',
+
+    video: 'retain-on-failure',
+
+    trace: 'on',
+
+    launchOptions: {
+      slowMo: 1500,
+    },
+  },
+});

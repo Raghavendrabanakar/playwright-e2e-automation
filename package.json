@@ -1,0 +1,19 @@
+{
+  "name": "loopline-playwright-automation",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "test:login": "playwright test tests/login.spec.js",
+    "test:projects": "playwright test tests/projects.spec.js",
+    "test:tasks": "playwright test tests/tasks.spec.js",
+    "test:team": "playwright test tests/team.spec.js",
+    "test:settings": "playwright test tests/settings.spec.js",
+    "test:report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.55.0"
+  }
+}
