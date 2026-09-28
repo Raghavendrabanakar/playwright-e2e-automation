@@ -12,6 +12,8 @@ export default defineConfig({
 
   fullyParallel: false,
 
+  workers: process.env.CI ? 1 : undefined,
+
   reporter: [
     ['html', { open: 'never' }],
     ['list'],
@@ -22,7 +24,8 @@ export default defineConfig({
 
     browserName: 'chromium',
 
-    headless: false,
+    // Headed locally, headless in GitHub Actions
+    headless: !!process.env.CI,
 
     screenshot: 'only-on-failure',
 
@@ -31,7 +34,8 @@ export default defineConfig({
     trace: 'on',
 
     launchOptions: {
-      slowMo: 1500,
+      // Slow motion only when running locally
+      slowMo: process.env.CI ? 0 : 800,
     },
   },
 });
