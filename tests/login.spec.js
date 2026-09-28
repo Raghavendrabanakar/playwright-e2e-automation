@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('Login Tests', () => {
+test.describe('Login Tests', { tag: '@smoke' }, () => {
 
   test('valid user should login successfully', async ({ page }) => {
 

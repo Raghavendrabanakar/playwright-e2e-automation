@@ -8,7 +8,9 @@ on:
     branches: [main, master]
 
 jobs:
-  test:
+
+  smoke:
+    name: Smoke Tests
     timeout-minutes: 60
     runs-on: ubuntu-latest
 
@@ -27,16 +29,51 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
 
-      - name: Run Playwright tests
-        run: npx playwright test
+      - name: Run Smoke Tests
+        run: npx playwright test --grep "@smoke"
         env:
           TEST_USERNAME: ${{ secrets.TEST_USERNAME }}
           TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
 
-      - name: Upload Playwright report
+      - name: Upload Smoke Report
         uses: actions/upload-artifact@v5
         if: ${{ !cancelled() }}
         with:
-          name: playwright-report
+          name: playwright-smoke-report
+          path: playwright-report/
+          retention-days: 30
+
+
+  regression:
+    name: Regression Tests
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: lts/*
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Run Regression Tests
+        run: npx playwright test --grep "@regression"
+        env:
+          TEST_USERNAME: ${{ secrets.TEST_USERNAME }}
+          TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
+
+      - name: Upload Regression Report
+        uses: actions/upload-artifact@v5
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-regression-report
           path: playwright-report/
           retention-days: 30

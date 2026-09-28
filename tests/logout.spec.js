@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 
-test('user should logout successfully', async ({ page }) => {
+test('user should logout successfully',{ tag: '@smoke' },
+   async ({ page }) => {
 
   await page.goto('/');
 

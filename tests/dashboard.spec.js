@@ -1,45 +1,56 @@
 import { test, expect } from '@playwright/test';
 
-test('user should access authenticated dashboard', async ({ page }) => {
+test(
+  'user should access authenticated dashboard',
+  { tag: '@smoke' },
+  async ({ page }) => {
 
-  await page.goto('/');
+    await page.goto('/');
 
-  // Login
-  await page.locator('#username').fill('raghu');
+    // Login
 
-  await page
-    .locator('[type="password"]')
-    .fill('Test@123');
+    await page
+      .locator('#username')
+      .fill(process.env.TEST_USERNAME);
 
-  await page.locator('#login-button').click();
+    await page
+      .locator('[type="password"]')
+      .fill(process.env.TEST_PASSWORD);
 
-  // Verify successful login
-  await expect(
-    page.locator('text=You\'re in.')
-  ).toBeVisible();
+    await page.locator('#login-button').click();
 
-  // Verify dashboard
-  const dashboard = page.locator('[data-testid="dashboard"]');
+    // Verify successful login
 
-  await expect(dashboard).toBeVisible();
+    await expect(
+      page.locator('text=You\'re in.')
+    ).toBeVisible();
 
-  // Verify dashboard statistics
-  await expect(
-    dashboard.locator('.label').filter({
-      hasText: /^Total projects$/
-    })
-  ).toBeVisible();
+    // Verify dashboard
 
-  await expect(
-    dashboard.locator('.label').filter({
-      hasText: /^Active$/
-    })
-  ).toBeVisible();
+    const dashboard = page.locator(
+      '[data-testid="dashboard"]'
+    );
 
-  await expect(
-    dashboard.locator('.label').filter({
-      hasText: /^Done$/
-    })
-  ).toBeVisible();
+    await expect(dashboard).toBeVisible();
 
-});
+    // Verify dashboard statistics
+
+    await expect(
+      dashboard.locator('.label').filter({
+        hasText: /^Total projects$/
+      })
+    ).toBeVisible();
+
+    await expect(
+      dashboard.locator('.label').filter({
+        hasText: /^Active$/
+      })
+    ).toBeVisible();
+
+    await expect(
+      dashboard.locator('.label').filter({
+        hasText: /^Done$/
+      })
+    ).toBeVisible();
+  }
+);

@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('Tasks E2E Tests', () => {
+test.describe('Tasks E2E Tests',{ tag: '@regression' },
+   () => {
 
   test.beforeEach(async ({ page }) => {
 
