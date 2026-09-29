@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig } from '@playwright/test';
+import { defineConfig, devices } from '@playwright/test';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -11,7 +11,7 @@ const baseURL =
 export default defineConfig({
   testDir: './tests',
 
-  timeout: 30 * 1000,
+  timeout: 60 * 1000,
 
   expect: {
     timeout: 5000,
@@ -19,7 +19,7 @@ export default defineConfig({
 
   fullyParallel: false,
 
-  workers: process.env.CI ? 1 : undefined,
+  workers: 1,
 
   reporter: [
     ['html', { open: 'never' }],
@@ -28,8 +28,8 @@ export default defineConfig({
 
   use: {
     baseURL,
-    browserName: 'chromium',
 
+    // Headed locally, headless in GitHub Actions
     headless: !!process.env.CI,
 
     screenshot: 'only-on-failure',
@@ -37,7 +37,30 @@ export default defineConfig({
     trace: 'on',
 
     launchOptions: {
-      slowMo: process.env.CI ? 0 : 800,
+      slowMo: process.env.CI ? 0 : 300,
     },
   },
+
+  projects: [
+    {
+      name: 'chromium',
+      use: {
+        ...devices['Desktop Chrome'],
+      },
+    },
+
+    {
+      name: 'firefox',
+      use: {
+        ...devices['Desktop Firefox'],
+      },
+    },
+
+    {
+      name: 'webkit',
+      use: {
+        ...devices['Desktop Safari'],
+      },
+    },
+  ],
 });

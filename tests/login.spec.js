@@ -52,19 +52,34 @@ test.describe('Login Tests', { tag: '@smoke' }, () => {
   });
 
 
-  test('empty username should not login', async ({ page }) => {
+ test('empty username should not login', async ({ page }) => {
 
-    await page.goto('/');
+  await page.goto('/');
 
-    await page
-      .locator('[type="password"]')
-      .fill(process.env.TEST_PASSWORD);
+  const username = page.locator('#username');
+  const password = page.locator('[type="password"]');
+  const loginButton = page.locator('#login-button');
 
-    await page.locator('#login-button').click();
+  // Keep username empty
+  await expect(username).toHaveValue('');
 
-    await expect(
-      page.locator('#username')
-    ).toBeVisible();
+  // Enter valid password
+  await password.fill(process.env.TEST_PASSWORD);
+
+  // Attempt login
+  await loginButton.click({
+    force: true,
+    timeout: 10000
   });
+
+  // User should remain on the login page
+  await expect(username).toBeVisible();
+  await expect(password).toBeVisible();
+  await expect(loginButton).toBeVisible();
+
+  // Username should still be empty
+  await expect(username).toHaveValue('');
+
+});
 
 });
