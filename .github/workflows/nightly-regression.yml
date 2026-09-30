@@ -1,0 +1,52 @@
+name: Nightly Regression Tests
+
+on:
+  schedule:
+    # Every day at 9:00 PM IST
+    - cron: '30 15 * * *'
+
+  workflow_dispatch:
+
+jobs:
+  regression:
+    name: Nightly Regression - ${{ matrix.browser }}
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        browser:
+          - chromium
+          - firefox
+          - webkit
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: lts/*
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps ${{ matrix.browser }}
+
+      - name: Run Regression Tests
+        run: npx playwright test --grep "@regression" --project=${{ matrix.browser }}
+        env:
+          TEST_USERNAME: ${{ secrets.TEST_USERNAME }}
+          TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
+
+      - name: Upload Playwright Report
+        uses: actions/upload-artifact@v5
+        if: ${{ !cancelled() }}
+        with:
+          name: nightly-regression-${{ matrix.browser }}
+          path: playwright-report/
+          retention-days: 30
